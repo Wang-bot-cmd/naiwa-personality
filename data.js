@@ -50,6 +50,29 @@ globalThis.NaiwaData = (() => {
       "Do not have a good imagination.", "关注自觉想象的丰富程度，不拿创作成绩或自信程度替代。"],
   ].map(([dimension, reverse, text, note, sourceItem, rationale], index) =>
     ({ id: index + 1, dimension, reverse, text, note, sourceItem, rationale }));
+  const followups = [
+    ["E", false, "和不太熟悉的人待在一起，我通常也觉得自在。", "换一个社交场景",
+      "Feel comfortable around people.", "补充在人群中的自在感，与聚会时的活跃表达不完全相同。"],
+    ["E", true, "在陌生人面前，我通常比较安静，很少主动开口。", "陌生人面前的你",
+      "Am quiet around strangers.", "补充陌生情境中的交谈倾向，不据此诊断社交焦虑。"],
+    ["A", false, "有人需要帮助时，我通常愿意专门留一点时间给对方。", "把关心留进日程",
+      "Take time out for others.", "补充关心他人的行动倾向；实际时间和资源也会影响回答。"],
+    ["A", true, "别人的事情过得好不好，我通常不太放在心上。", "关心的距离",
+      "Feel little concern for others.", "补充对他人处境的关切，不用某次拒绝或独处需求代替判断。"],
+    ["C", false, "安排好了日程后，我通常会按计划做，而不只是写下来。", "计划和实际之间",
+      "Follow a schedule.", "补充遵循日程的倾向，不等同于桌面整齐或工作成绩。"],
+    ["C", true, "轮到自己负责的事情，我常会设法躲过去，留给别人处理。", "轮到我负责时",
+      "Shirk my duties.", "补充履行责任的自我描述，不把合理分工或拒绝额外任务当成逃避。"],
+    ["N", false, "事情还没发生，我就经常忍不住担心各种可能。", "还没发生的事",
+      "Worry about things.", "补充平常的担忧倾向；不是焦虑障碍筛查。官方情绪稳定性键在本站 N 轴上取相反方向。"],
+    ["N", true, "日常遇到一点小摩擦，我很少会觉得烦躁。", "遇见小摩擦",
+      "Rarely get irritated.", "补充烦躁的自觉频率；反向计入情绪波动，不评价情绪是否合理。"],
+    ["O", false, "面对普通的小事，我的脑中也经常冒出许多不同的点子。", "点子冒出来的时候",
+      "Am full of ideas.", "补充点子产生的自我感受，不代表创意成就或智力水平。"],
+    ["O", true, "遇到一个话题，我通常了解个大概就够了，不太想继续往深处琢磨。", "好奇会走多远",
+      "Will not probe deeply into a subject.", "补充深入探索的兴趣；来自更宽的 IPIP 条目集，并非原 Mini-IPIP 条目。"],
+  ].map(([dimension, reverse, text, note, sourceItem, rationale], index) =>
+    ({ id: `extra${index + 1}`, dimension, reverse, text, note, sourceItem, rationale, supplemental: true }));
   const personas = [
     {
       id: "battle", name: "战斗奶娃", mode: "战斗模式", code: "01", color: "#eab948",
@@ -152,10 +175,38 @@ globalThis.NaiwaData = (() => {
       prototype: { E: 60, A: 95, C: 45, N: 45, O: 60 },
     },
   ];
+  const states = [
+    ["buffering", "开机缓冲中", "calm", "我醒了，但还没有完全醒。", "先喝一口水，今天可以慢一点开始。", ["慢启动", "稍等一下"]],
+    ["lowbattery", "社交省电中", "reaper", "不是不喜欢你，是电量只剩一格。", "把独处时间留给自己，回复可以晚一点。", ["暂停营业", "边界在线"]],
+    ["daydream", "脑内出走中", "cosmic", "身体在工位，灵魂在环游宇宙。", "想到什么就先记一句，回来再决定做不做。", ["短暂离线", "脑洞旅行"]],
+    ["charge", "行动开关已打开", "battle", "纠结结束，先搞定一件小事。", "把目标缩小到第一步，现在就动一下。", ["开干", "先走一步"]],
+    ["care", "温柔接收中", "angel", "今天有空，听你把话说完。", "陪伴不一定要立刻给出一个解决方案。", ["有人在听", "慢慢说"]],
+    ["mischief", "想整点新活", "devil", "常规方案先放放，我有个大胆的想法。", "留一点给新鲜事，也记得问问队友愿不愿意。", ["反套路", "今天不无聊"]],
+    ["focus", "专注结界已展开", "divine", "消息晚点回，这件事我想好好做。", "一次只留一个窗口，也给自己留一个休息点。", ["认真营业", "请勿打扰"]],
+    ["notoday", "今天不想忍", "fiery", "我可以好好说，但我不想说没关系。", "感受先被自己看见，再决定怎样表达。", ["直球发言", "界限清楚"]],
+    ["soft", "心软加载中", "gentle", "嘴上说着随便，还是想对你好一点。", "关心可以很小，一句真诚的问候也算。", ["柔软一点", "善意在线"]],
+    ["rainy", "心里下了点小雨", "sensitive", "没什么大事，就是想安静待一会儿。", "不用马上变开心。休息、吃饭，找个愿意听的人。", ["允许低气压", "先照顾自己"]],
+    ["offwork", "提前进入下班状态", "calm", "事情做完了吗？先让脑子喘口气。", "休息不是奖励，是今天也需要的一部分。", ["松一口气", "暂停内耗"]],
+    ["inspiration", "灵感突然袭击", "cosmic", "等等，这个点子好像有点东西。", "先留个草稿，不必一口气把整个宇宙造完。", ["想法冒泡", "先记下来"]],
+  ].map(([id, name, artId, quote, description, tags], index) =>
+    ({ id, name, artId, quote, description, tags, code: String(index + 1).padStart(2, "0"), kind: "state" }));
+  const papers = [
+    { author: "Donnellan 等，2006", title: "The Mini-IPIP scales: Tiny-yet-effective measures of the Big Five factors of personality.",
+      doi: "10.1037/1040-3590.18.2.192", use: "20 道基础题的直接条目来源。原研究的验证结论不转移到本站改写。"},
+    { author: "Soto 与 John，2017", title: "The next Big Five Inventory (BFI-2): Developing and assessing a hierarchical model with 15 facets to enhance bandwidth, fidelity, and predictive power.",
+      doi: "10.1037/pspp0000096", use: "提醒同一人格维度含有不同侧面，不把一个生活习惯等同于整个维度。未复制 BFI-2 题目，也未测量其 15 个侧面。"},
+    { author: "Credé 等，2012", title: "An evaluation of the consequences of using short measures of the Big Five personality traits.",
+      doi: "10.1037/a0027403", use: "提醒极短测量有信息损失风险，因此不采用一题定人格。该文没有验证本站的分支或计分方式。"},
+    { author: "Fleeson，2001", title: "Toward a structure- and process-integrated view of personality: Traits as density distributions of states.",
+      doi: "10.1037/0022-3514.80.6.1011", use: "区分一般倾向和情境中的状态。今日状态由本人选择，不从人格题推断，也不参与计分。"},
+    { author: "Meijer 与 Nering，1999", title: "Computerized Adaptive Testing: Overview and Introduction.",
+      doi: "10.1177/01466219922031310", use: "正式自适应测验涉及题库、条目选择和潜在特质估计。本站只有透明的规则补问，没有题库标定，不称为专业 CAT。"},
+  ];
   return Object.freeze({
-    version: "v2", dimensions, questions, personas,
+    version: "v3", dimensions, questions, followups, personas, states, papers,
     research: {
       key: "https://ipip.ori.org/MiniIPIPKey.htm",
+      broadKey: "https://ipip.ori.org/newBigFive5broadKey.htm",
       permission: "https://ipip.ori.org/newPermission.htm",
       paper: "https://doi.org/10.1037/1040-3590.18.2.192",
       citation: "Donnellan, M. B., Oswald, F. L., Baird, B. M., & Lucas, R. E. (2006). The Mini-IPIP scales: Tiny-yet-effective measures of the Big Five factors of personality. Psychological Assessment, 18(2), 192–203.",
