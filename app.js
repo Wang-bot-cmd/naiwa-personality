@@ -249,7 +249,7 @@
         </ul>
       </details>
       <p>官方说明区分词汇学大五与更广泛的五因素模型，第五维度在此指 Intellect / Imagination，不是智商测验，也不能代表开放性的所有方面。</p>
-      <p>核对日期：2026 年 10 月 19 日。基础研究核对书目信息与摘要；三篇近年研究另核对出版社正文的摘要、方法与讨论。不是系统综述，不表示这些是全部最新研究或原作者为本站背书。</p>
+      <p>核对日期：2026 年 10 月 19 日。阅读范围为论文书目信息、DOI、公开收录摘要及官方条目键；三篇近年研究另通过 Crossref 核对作者、年份、题名与摘要。不宣称阅读全文或完成系统综述，也不表示这些是全部最新研究或原作者为本站背书。</p>
       <details class="source-details"><summary>全部 30 道题的来源对应</summary>
         <ol class="source-list">${[...D.questions, ...D.followups].map(q => `<li><strong>${q.supplemental ? "备用补问 · " : ""}${D.dimensions.find(d => d.id === q.dimension).name} · ${q.reverse ? "反向" : "正向"}</strong><p lang="en">${q.sourceItem}</p><p>${q.text}</p><p>${q.rationale}</p></li>`).join("")}</ol>
       </details>

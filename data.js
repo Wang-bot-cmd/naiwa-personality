@@ -224,13 +224,13 @@ globalThis.NaiwaData = (() => {
     ({ id, name, artId, quote, description, tags, code: String(index + 1).padStart(2, "0"), kind: "state" }));
   const papers = [
     { author: "Kay 等，2026", title: "\"To Be\" or \"I Am Someone Who Tends to Be\": Does the Wording of Personality Items Matter?",
-      doi: "10.1525/collabra.150375", category: "recent", scope: "核对出版社摘要、方法与讨论；研究四种英文条目格式及是否加上主语。",
+      doi: "10.1525/collabra.150375", category: "recent", scope: "核对 DOI、作者与 Crossref 收录摘要；研究四种英文条目格式及是否加上主语。",
       use: "提醒区分改写的具体范围。研究没有验证中文玩梗题；不能由其结果推断本站题目与原量表等效。"},
     { author: "Persson 等，2025", title: "How Social Desirability Influences the Relationship between Measures of Personality and Key Constructs in Positive Psychology",
-      doi: "10.1007/s10902-025-00879-3", category: "recent", scope: "核对出版社摘要、方法与讨论；比较标准与评价性较中性的自评测量。",
+      doi: "10.1007/s10902-025-00879-3", category: "recent", scope: "核对 DOI、作者与 Crossref 收录摘要；比较标准与评价性较中性的自评测量。",
       use: "用于审查夸奖、羞辱或道德暗示，避免把某种回答写得更体面。该文不验证本站的幽默改写或人格卡。"},
     { author: "Bauditz 等，2026", title: "Construal and Contact in Person–Situation Relations: Evidence from Controlled and Naturalistic Designs",
-      doi: "10.1177/08902070261449352", category: "recent", scope: "核对出版社摘要、方法与讨论；结合实验室纵向设计与日常情境经验取样。",
+      doi: "10.1177/08902070261449352", category: "recent", scope: "核对 DOI、作者与 Crossref 收录摘要；结合实验室纵向设计与日常情境经验取样。",
       use: "提醒情境与当下状态有关联，不把今天的感受直接当成固定人格。本站状态卡仍由本人选择，不参与计分。"},
     { author: "Donnellan 等，2006", title: "The Mini-IPIP scales: Tiny-yet-effective measures of the Big Five factors of personality.",
       doi: "10.1037/1040-3590.18.2.192", use: "20 道基础题的直接条目来源。原研究的验证结论不转移到本站改写。"},
