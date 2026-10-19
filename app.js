@@ -55,7 +55,7 @@
   function answerFor(q) { return q.supplemental ? supplemental[q.id] ?? null : answers[q.id - 1]; }
   function stateCollection() {
     return `<section class="state-section" aria-labelledby="state-title">
-      <div class="section-title-row"><h2 id="state-title">人格之外，今天也可以是……</h2><span class="section-aside">十二种日常状态</span></div>
+      <div class="section-title-row"><h2 id="state-title">人格先放放，今天切什么模式？</h2><span class="section-aside">十二种自选状态</span></div>
       <div class="state-strip">${D.states.map(s => `<button class="state-item" data-action="state" data-id="${s.id}">
         ${portrait(s, "")}<h3>${s.name}</h3></button>`).join("")}</div>
       <p class="state-footnote">人格是一般倾向，状态随情境变化。这一页不替你的心情下结论。</p>
@@ -63,7 +63,7 @@
   }
   function collection() {
     return `<section class="collection-section" aria-labelledby="collection-title">
-      <div class="section-title-row"><h2 id="collection-title">十种奶娃，十种打开方式</h2>
+      <div class="section-title-row"><h2 id="collection-title">奶娃到齐，各有各的抽象</h2>
       <a class="text-action" href="#gallery">翻开人格图鉴${icon("arrow-right")}</a></div>
       <div class="mini-collection">${D.personas.map(p =>
         `<button class="mini-character" data-action="preview" data-id="${p.id}" title="查看${p.name}">${portrait(p, "")}<span>${p.name}</span></button>`
@@ -73,8 +73,8 @@
   function observation() {
     const p = D.personas[observerIndex];
     const value = answerFor(currentQuestion());
-    const reactions = ["收到，这不是你的日常。", "嗯，给答案留点余地。", "说不准，也是一种真实回答。", "这幅画面，好像有点熟悉。", "懂了，是本人的生活片段。"];
-    return `<aside class="observatory" aria-label="奶娃人格预览">
+    const reactions = ["收到，这段剧情不是你的主场。", "收到，偶尔客串一下。", "说不准也行，奶娃不替你拍板。", "收到，这个片段有点眼熟。", "懂了，本人的生活片段，实名出演。"];
+    return `<aside class="observatory${value === null ? "" : " is-reacting"}" aria-label="陪答奶娃，不代表测试结果">
       <div class="observe-label">你的陪答奶娃</div>
       ${portrait(p)}
       <div class="observation-text">
@@ -94,7 +94,7 @@
     const total = activeQuestions().length;
     const answered = answers.filter(x => x !== null).length + Object.keys(supplemental).length;
     return `<div class="page-heading">
-      <div><h1>你是哪种奶娃？</h1><p class="page-subtitle">有的奶娃拯救世界，有的奶娃只想躺一会儿。</p></div>
+      <div><h1>你是哪种奶娃？</h1><p class="page-subtitle">有人切战斗模式，有人还在开机缓冲。</p></div>
       ${portrait(D.personas[observerIndex], "mobile-sticker")}
       <div class="test-meta"><span>${icon("list-checks")}20 题 + 按需补问</span><span>${icon("clock-3")}约 3–5 分钟</span></div>
     </div>
@@ -107,7 +107,10 @@
         <form id="quiz-form" class="enter">
           <div class="question-note"><span>${q.note}</span>${iconButton("question-source", "book-open", "查看本题依据")}</div>
           ${q.supplemental ? `<p class="branch-note">${icon("git-branch")}${q.reason}</p>` : ""}
-          <h2 class="question-title" id="question-title" tabindex="-1">${q.text}</h2>
+          <div class="question-copy">
+            <h2 class="question-title" id="question-title" tabindex="-1">${q.text}</h2>
+            <p class="question-aside"><span>奶娃画外音</span>${q.aside}</p>
+          </div>
           <fieldset class="answer-list" aria-labelledby="question-title">
             ${D.options.map((label, value) => `<label class="answer-option${selected === value ? " selected" : ""}">
               <input type="radio" name="answer" value="${value}" ${selected === value ? "checked" : ""} required>
@@ -141,29 +144,30 @@
   }
   function result(p, preview = false) {
     const personal = !preview && ownResult?.persona.id === p.id;
-    const kicker = preview ? "人格图鉴 · 这是一种奶娃，不是一种标准" :
-      personal ? "根据你这次的回答，你的奶娃是" : "你收到了一张奶娃人格卡";
+    const kicker = preview ? "人格图鉴 · 看看这只的设定" :
+      personal ? "本次回答匹配到的奶娃，已就位" : "朋友递来一只奶娃，请查收";
     return `<section class="result-layout enter" style="--persona-color:${p.color}">
       <div class="result-header">
         <p class="result-kicker">${kicker}</p>
         <h1 class="result-title"><span class="name-highlight">${p.name}</span></h1>
         <blockquote class="result-quote">“${p.quote}”</blockquote>
         <p class="result-tags">${p.tags.map(tag => `<span>${tag}</span>`).join("")}</p>
-        <p class="result-description">${p.description}</p>
         <div class="result-buttons">
           ${personal ? `<button class="button lime" data-action="share" data-id="${p.id}">${icon("share-2")}分享我的奶娃</button>
             <button class="button secondary" data-action="restart">${icon("rotate-ccw")}再测一次</button>` :
             `<button class="button lime" data-action="start">${icon("arrow-right")}我也测一测</button>
             <button class="button secondary" data-action="share" data-id="${p.id}">${icon("share-2")}分享这只奶娃</button>`}
         </div>
+        <p class="result-description">${p.description}</p>
+        <p class="result-fiction">角色设定供你玩梗，不是科学人格分类，也不概括你的全部。</p>
         ${personal ? "" : `<p class="shared-note">${preview ? "图鉴预览不代表你的测试结果。" : "这张卡只展示人格类型，不包含答题记录或分数。"}</p>`}
       </div>
       <figure class="result-figure">${portrait(p)}<figcaption><span class="mode-square"></span>${p.mode}<span>NO. ${p.code} / 10</span></figcaption></figure>
     </section>
-    <section class="result-notes" aria-label="人格解读">
-      <div class="result-note"><h2>${icon("coffee")}你的日常</h2><p>${p.daily}</p></div>
-      <div class="result-note"><h2>${icon("sparkles")}你的隐藏技能</h2><p>${p.strength}</p></div>
-      <div class="result-note"><h2>${icon("sprout")}给今天的你</h2><p>${p.reminder}</p></div>
+    <section class="result-notes" aria-label="奶娃小剧场，以下为娱乐角色文案">
+      <div class="result-note"><h2>${icon("clapperboard")}日常名场面</h2><p>${p.daily}</p></div>
+      <div class="result-note"><h2>${icon("message-circle")}内心弹幕</h2><p>“${p.monologue}”</p></div>
+      <div class="result-note"><h2>${icon("sprout")}友情提示</h2><p>${p.reminder}</p></div>
     </section>
     ${personal ? dimensions(ownResult.scores) : ""}
     ${stateCollection()}
@@ -182,7 +186,7 @@
   }
   function gallery() {
     const isState = galleryMode === "states";
-    return `<div class="page-heading"><div><h1>奶娃图鉴</h1><p class="page-subtitle">十种人格，十二种日常状态。都不是你的全部。</p></div>
+    return `<div class="page-heading"><div><h1>奶娃图鉴</h1><p class="page-subtitle">有的已经起飞，有的还在加载。都不是你的全部。</p></div>
       <a class="button secondary" href="#test">${icon("arrow-left")}回到测试</a></div>
       <div class="gallery-tabs" role="group" aria-label="图鉴分类">
         <button data-action="gallery-personas" aria-pressed="${!isState}">人格 / 10</button>
@@ -220,20 +224,32 @@
     if (!modal.open) modal.showModal();
     modal.scrollTop = 0;
   }
+  function paperList(recent) {
+    return `<ul class="research-list">${D.papers.filter(p => (p.category === "recent") === recent).map(p =>
+      `<li><strong>${p.author}</strong><p lang="en">${p.title}</p><p>${p.use}</p>
+        ${p.scope ? `<p class="reading-scope">${p.scope}</p>` : ""}
+        <a href="https://doi.org/${p.doi}" target="_blank" rel="noopener noreferrer">论文 DOI${icon("arrow-up-right")}</a></li>`).join("")}</ul>`;
+  }
   function about() {
     showModal("关于这场奶娃观察", `<div class="about-content">
-      <p>用一只奶娃，表达今天的自己。这是一份趣味人格探索，不是专业心理量表，也不能用来诊断任何心理或精神问题。奶娃表情由创作者原创提供。</p>
+      <p>玩梗归玩梗，人格不盖章。这是参考人格研究条目的趣味自我探索，不是专业心理量表，不能诊断任何心理或精神问题。</p>
       <h3>参考了什么？</h3>
       <p>20 道基础题逐一参考 Mini-IPIP 的公开英文条目及正反向计分键；10 道备用补问来自 IPIP 更宽的条目集，每次最多使用 6 道。五个维度分别为外向性、宜人性、尽责性、情绪波动与想象思辨。</p>
       <p>英文原量表有发表研究，但本站的中文情境改写、作答标签和奶娃匹配未经过信效度验证，不能继承原量表的可靠性数字。不将它称为标准中文版 Mini-IPIP、BFI-2 或 MBTI。</p>
-      <ul>
-        ${D.papers.map(p => `<li><strong>${p.author}</strong><p lang="en">${p.title}</p><p>${p.use}</p><a href="https://doi.org/${p.doi}" target="_blank" rel="noopener noreferrer">论文 DOI</a></li>`).join("")}
+      <details class="research-details" open><summary>近年研究提醒 · 2025–2026</summary>
+        <p>这三篇用于约束措辞和解释，不是新增题目来源，更不证明奶娃分类或补问更准确。</p>
+        ${paperList(true)}
+      </details>
+      <details class="research-details"><summary>基础研究与直接条目来源</summary>
+        ${paperList(false)}
+        <ul>
         <li><a href="${D.research.key}" target="_blank" rel="noopener noreferrer">Mini-IPIP 官方条目与计分键</a>：逐题改写的直接依据。</li>
         <li><a href="${D.research.broadKey}" target="_blank" rel="noopener noreferrer">IPIP Big-Five 官方条目集</a>：补充情境题的直接依据。</li>
         <li><a href="${D.research.permission}" target="_blank" rel="noopener noreferrer">IPIP 公开使用说明</a>：条目、量表可供商业或非商业使用。</li>
-      </ul>
+        </ul>
+      </details>
       <p>官方说明区分词汇学大五与更广泛的五因素模型，第五维度在此指 Intellect / Imagination，不是智商测验，也不能代表开放性的所有方面。</p>
-      <p>阅读范围：上述论文的书目信息与摘要、IPIP 官方条目及计分键；不是系统综述，也不表示原作者为本站背书。</p>
+      <p>核对日期：2026 年 10 月 19 日。基础研究核对书目信息与摘要；三篇近年研究另核对出版社正文的摘要、方法与讨论。不是系统综述，不表示这些是全部最新研究或原作者为本站背书。</p>
       <details class="source-details"><summary>全部 30 道题的来源对应</summary>
         <ol class="source-list">${[...D.questions, ...D.followups].map(q => `<li><strong>${q.supplemental ? "备用补问 · " : ""}${D.dimensions.find(d => d.id === q.dimension).name} · ${q.reverse ? "反向" : "正向"}</strong><p lang="en">${q.sourceItem}</p><p>${q.text}</p><p>${q.rationale}</p></li>`).join("")}</ol>
       </details>
@@ -243,13 +259,16 @@
       <p>返回修改任何基础题后，已有补问及其答案会清空，基础题完成后重新选分支，避免旧分支混入新结果。</p>
       <h3>分数意味着什么？</h3>
       <p>每个维度有 4 道基础题，被补问的维度有 6 题。正向取 0–4，反向取 4 减原值，按本维度实际题数等权平均后换算为 0–100。五个维度在奶娃匹配中仍等权，不因题数更多而加权。</p>
-      <p>系统用距离寻找最接近的虚构原型；十种原型由本站设计，不是研究发现的人格类别。结果不是固定身份，分数不是人群百分位。今日状态另外自选，不改变人格结果。</p>
+      <p>系统用距离寻找最接近的虚构原型；十种原型由本站设计，不是研究发现的人格类别。“名场面”和“内心弹幕”都是角色小剧场，不是从题目推导出的经历、读心或能力判断。结果不是固定身份，分数不是人群百分位。今日状态另外自选，不改变人格结果。</p>
       <p>“愤怒”“忧郁”等模式名称来自表情包，仅是角色语气，不是临床判断。</p>
       <h3>答案会去哪里？</h3>
       <p>答案仅留在当前页面内存中，不上传、不写入本地存储；刷新或关闭页面后清空。分享链接只包含奶娃类型，不包含答案和维度分数。链接可以被转发，分享前请确认你愿意公开这种人格描述。</p>
       <p>本网站不设置登录、广告或访问统计。托管与网络服务商仍可能产生常规访问日志，请勿在链接中添加个人信息。</p>
       <h3>图像与字体</h3>
       <p>十幅表情由用户声明原创并提供，保留原图文字与主体；十二种状态复用这些素材，不冒充新增插画。未再发布无明确授权的网络表情。展示字体使用本地子集化的霞鹜文楷屏幕阅读版，遵循 SIL OFL 1.1。</p>
+      <h3>梗从哪里来？</h3>
+      <p>文风参考中文网络二创里的“切换模式”“开机缓冲”“脑内弹幕”等抽象表达，本站文案重新编写。题干保留行为、频率和方向，画外音不计分。不了解梗也可以按题干作答。</p>
+      <p>这不是奶龙官方产品，与相关 IP 官方无合作或背书。没有搬用其动画、配音、音乐或新增网络表情；文风灵感不是心理学证据。</p>
     </div>`);
   }
   function questionSource() {
@@ -451,6 +470,8 @@
       if (fill) fill.style.width = `${answered / activeQuestions().length * 100}%`;
       const holder = document.querySelector(".observatory");
       if (holder) { holder.outerHTML = observation(); icons(); }
+      const mobile = document.querySelector(".mobile-sticker");
+      if (mobile) mobile.outerHTML = portrait(D.personas[observerIndex], "mobile-sticker is-reacting");
     }
   });
   document.addEventListener("submit", event => {

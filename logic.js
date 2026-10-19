@@ -64,13 +64,13 @@ globalThis.NaiwaLogic = (() => {
   function route(hash) {
     if (!hash || hash === "#" || hash === "#test") return { page: "test" };
     if (hash === "#gallery") return { page: "gallery" };
-    // V1 links remain type-only cards; never reconstruct old private scores.
-    const state = /^#state\/v3\/([a-z]+)$/.exec(hash);
+    // Legacy links remain type-only cards; never reconstruct old private scores.
+    const state = /^#state\/v[34]\/([a-z]+)$/.exec(hash);
     if (state) {
       const card = data.states.find(item => item.id === state[1]);
       if (card) return { page: "state", card };
     }
-    const result = /^#(result|persona)\/v[123]\/([a-z]+)$/.exec(hash);
+    const result = /^#(result|persona)\/v[1234]\/([a-z]+)$/.exec(hash);
     if (result) {
       const persona = data.personas.find(p => p.id === result[2]);
       if (persona) return { page: result[1], persona };
